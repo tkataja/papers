@@ -71,9 +71,9 @@
        "  --dl-only true    Download only\n"
        "  --topic <string>  Fetches wallpaper with given topic"))
 
-(defn show-help [args]
+(defn show-help [cli-opts]
   (let [known-args #{"--topic" "--dl-only"}
-        given-args (set (keys args))
+        given-args (set (keys cli-opts))
         unknown-args (difference given-args known-args)]
     (when (or (odd? (count *command-line-args*)) (seq unknown-args))
       (println help)
