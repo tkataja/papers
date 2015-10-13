@@ -1,10 +1,10 @@
 #!/usr/bin/env planck
 (ns tkataja.papers
   (:require [planck.shell :refer [sh *sh-dir*]]
-            [planck.bundle :as b]
+            [planck.core :refer [exit]]
+            planck.bundle
             [planck.core :refer [*command-line-args*]]
-            [clojure.string :refer [trim-newline]]
-            [goog.string :as gstring]))
+            [clojure.string :refer [trim-newline]]))
 
 ;;
 ;; Shell stuff
@@ -65,11 +65,30 @@
 ;; ./wallpaper.cljs --topic foo => {"topic" "foo"}
 ;;
 
+(def help
+  (str "Usage: ./wallpaper.cljs --arg1 val --arg2 val\n"
+       "\n"
+       "This script fetches random wallpaper and sets it as background.\n"
+       "\n"
+       "Supported args and values:\n"
+       "  --dl-only true    Download only\n"
+       "  --topic <string>  Fetches wallpaper with given topic"))
+
+(defn print-help []
+  (println help))
+
+(defn show-help [args]
+  (let [known-args #{"--topic" "--dl-only"}]
+    (when (or (odd? (count args)))
+      (print-help)
+      (exit 0))))
+
 (defn parse-cli-opts []
   (let [options-map (->> *command-line-args* (partition 2) (mapv vec) (into {}))]
     options-map))
 
 (defn main []
+  (show-help *command-line-args*)
   (let [cli-opts (parse-cli-opts)
         topic (get cli-opts "--topic")
         only-download? (get cli-opts "--dl-only")
