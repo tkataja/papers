@@ -1,9 +1,9 @@
 #!/usr/bin/env planck
 (ns tkataja.papers
-  (:require [planck.shell :refer [sh *sh-dir*]]
+  (:require [planck.shell :refer [sh]]
             [planck.core :refer [exit]]
-            planck.bundle
             [planck.core :refer [*command-line-args*]]
+            planck.bundle
             [clojure.string :refer [trim-newline]]))
 
 ;;
@@ -60,10 +60,6 @@
     (println "execute query: " query)
     (sh "sqlite3" db-file query)
     (sh "killall" "Dock")))
-
-;;
-;; ./wallpaper.cljs --topic foo => {"topic" "foo"}
-;;
 
 (def help
   (str "Usage: ./wallpaper.cljs --arg1 val --arg2 val\n"
