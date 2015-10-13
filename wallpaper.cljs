@@ -70,13 +70,10 @@
        "  --dl-only true    Download only\n"
        "  --topic <string>  Fetches wallpaper with given topic"))
 
-(defn print-help []
-  (println help))
-
 (defn show-help [args]
   (let [known-args #{"--topic" "--dl-only"}]
     (when (or (odd? (count args)))
-      (print-help)
+      (println help)
       (exit 0))))
 
 (defn parse-cli-opts []
