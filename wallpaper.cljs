@@ -4,6 +4,7 @@
             [planck.core :refer [exit]]
             [planck.core :refer [*command-line-args*]]
             planck.bundle
+            [clojure.set :refer [difference]]
             [clojure.string :refer [trim-newline]]))
 
 ;;
@@ -71,8 +72,10 @@
        "  --topic <string>  Fetches wallpaper with given topic"))
 
 (defn show-help [args]
-  (let [known-args #{"--topic" "--dl-only"}]
-    (when (or (odd? (count args)))
+  (let [known-args #{"--topic" "--dl-only"}
+        given-args (set (keys args))
+        unknown-args (difference given-args known-args)]
+    (when (or (odd? (count *command-line-args*)) (seq unknown-args))
       (println help)
       (exit 0))))
 
@@ -81,8 +84,8 @@
     options-map))
 
 (defn main []
-  (show-help *command-line-args*)
   (let [cli-opts (parse-cli-opts)
+        _ (show-help cli-opts)
         topic (get cli-opts "--topic")
         only-download? (get cli-opts "--dl-only")
         fetch-fn (fn []
